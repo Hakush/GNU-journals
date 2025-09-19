@@ -129,7 +129,7 @@ sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flat
     if [ "$TERM_PROGRAM" != "vscode" ]; then
         fastfetch
     fi
-  ```bash
+  ```
 
 ### Installed Software
 
