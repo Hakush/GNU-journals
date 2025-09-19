@@ -1,320 +1,142 @@
-# Debian trixie 13 Journey
+# Debian Journey
 
-### Installation process
+## System Information
 
-Chose 'manual installation'
-Chose the ssd i want to install to
-Created boot partition, /boot mount point, ext4 type, boot flag, 512MB
-Created swap partition, swap type, swap flag, 8GB
-Created / partition, ext4 type, All space available
+* **OS:** Debian GNU/Linux 13 (trixie) x86\_64
+* **Kernel:** Linux 6.12.43+deb13-amd64
+* **Packages:** 2517 (dpkg), 17 (flatpak)
+* **Shell:** bash 5.2.37
+* **Display (HDMI-0):** 1600x900 @ 60 Hz \[External]
+* **DE:** GNOME 48.4
+* **WM:** Mutter (X11)
+* **Terminal:** GNOME Terminal 3.56.2
 
-Next i chose debian desktop enviroment + gnome + basic system tools (i want to exclude debian desktop enviroment + gnome in the future in favour of hyprland)
+**Hardware:**
 
-### First steps, config, etc 
-vision nocturna
-performance mode
-Night light
-added spanish latinoamerican as keyboard (besides english us)
-set timezone to utc-3
-nautilus -> preferences -> sort folders before files
-disable mouse acceleration
+* **CPU:** Intel(R) Core(TM) i7-7700K (8) @ 4.50 GHz
+* **GPU:** NVIDIA GeForce GTX 1050 Ti \[Discrete]
+* **Memory:** 9.59 GiB / 15.58 GiB (62%)
+* **Swap:** 0 B / 7.45 GiB (0%)
 
-#### added the following keyboard shortcuts:
-super shift s as interactive screenshot
-ctrl alt T as gnome-terminal
-alt + wasd as window resizing
-super + d as hide all normal windows
+**Storage:**
 
-#### Changed backgroung image and profile pic
-settings -> appereances -> backgroung image 
-settings -> system -> profile pic
+* **Disk (/):** 128.13 GiB / 211.22 GiB (61%) - ext4
+* **Disk (/mnt/HDDBLACK):** 463.76 GiB / 465.76 GiB (100%) - fuseblk \[Read-only]
+* **Disk (/mnt/WINDOWS):** 107.50 GiB / 111.03 GiB (97%) - fuseblk \[Read-only]
 
-#### Add user to sudoers
-su
-sudo usermod -aG sudo username
-sudo reboot
+---
 
-(as your user)
-sudo visudo /etc/sudoers
+## Installation Process
 
-add lines: '
-youruser    ALL=(ALL) NOPASSWD:ALL
-'
+* Chose **manual installation**
+* Selected SSD for installation
+* Created boot partition `/boot` (ext4, boot flag, 512MB)
+* Created swap partition (swap type, swap flag, 8GB)
+* Created `/` partition (ext4, all remaining space)
+* Installed: Debian desktop environment + GNOME + basic system tools
 
-sudo apt upgrade
-sudo apt update
+  * (*Next time*: exclude GNOME, try Hyprland instead)
 
-#### Automatically mount disks
+---
 
-Access 'disks'
-Select desired disk
-Click Additional partition options (ruedita)
-Click 'Edit Mount Options'
-Disable User defaults
-Edit Mount Point to a recognizible name
-Save
+## First Steps & Configuration
 
-#### add shortcuts for other disks
-go to desired folder, hit ctrl + D
+* Enabled **night light** & **performance mode**
+* Keyboard: English (US) + Spanish (LatAm)
+* Timezone: UTC-3
+* Nautilus preferences: “Sort folders before files”
+* Disabled mouse acceleration
 
-#### Log in to accounts
-- Netflix -> Enable DRM
-- Google (unc.edu.ar)
+### Custom Shortcuts
 
-#### Firefox
+* `Super + Shift + S` → interactive screenshot
+* `Ctrl + Alt + T` → GNOME Terminal
+* `Alt + WASD` → window resizing
+* `Super + D` → hide all windows
 
-Log in with my account, sync in bookmarks
-Settings -> Ctrl+Tab cycles through tabs in recently used order
-Second click next to url bar -> Bookmarks Toolbar -> always show
+### Personalization
 
-Add RoboForm firefox extension
+* Changed background & profile picture
+* Added user to sudoers via `visudo`
+* Updated system with `apt update && apt upgrade`
 
-#### Flatpak was missing so i installed it with
+---
 
+## Disk Management
+
+* Used **Disks** app for automatic mounts
+* Created shortcuts for mounted drives
+* Added recognizable mount points
+
+---
+
+## Accounts
+
+* Netflix (enabled DRM)
+* Google (unc.edu.ar)
+
+---
+
+## Firefox Setup
+
+* Synced bookmarks via Firefox account
+* Enabled: *Ctrl+Tab cycles tabs by recent order*
+* Showed bookmarks toolbar
+* Installed **RoboForm** extension
+
+---
+
+## Flatpak Installation
+
+```bash
 sudo apt install flatpak
-
 sudo apt-get --reinstall install -y gnome-software-plugin-flatpak
-
 sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-
-#### OS tweaks
-- removed unused software like:
-sound recorder
-mail app
-music
-gnome tour
-videos
-
-- add non-propietary repos
-sudo nano /etc/apt/sources.list
-addd 'contrib non-free' after 'main' in every line
-
-sudo apt update
-
-- install nice-to-have programs
-sudo apt install fastfetch htop btop -y
-
-- installed Thunderbird through software app (deb)
-- Installed Discord through software app (flatpak)
-- Installed Telegram through software app (flatpak)
-- Installed Extension Manager ""
-    - Inside extension manager, installed:
-        - Dash to Dock
-            Click Behaviour, "focus, minimize or show previews"
-            Shrink icons
-        - Blur my shell
-        - Caffeine
-        - Clipboard Indicator
-        - Removable drive menu
-        - Vitals
-            Settings -> Use Higher precision
-            Disable system track
-            Added cpu usage, system temperature and ram gb usage
-        - Gtk4 Desktop Icons NG (DING)
-- Gnome Tweaks
-    added minimize, maximize buttons
-- Installed Shortcut in software app
-- Added fastfetch at every terminal except vscode
-    nano ~/.bashrc
-
-    add the following lines
-
-    if [ "$TERM_PROGRAM" != "vscode" ]; then
-        fastfetch
-    fi
-
-#### Installed Gparted
-
-#### Downloaded balenaEtcher
-
-#### Installed gdisk
-
-sudo apt update && sudo apt install gdisk
-
-#### Use gdisk to change partition table from mbr to gpt
-
-sudo fdisk -l
-sudo gdisk /dev/sda
-'select option 3, blank gpt'
-'press w' to write
-'press y' to confirm
-
-#### Install steam
-
-go to steam page https://steamcommunity.com/ and download .deb
-
-install dependencies like
-sudo apt install curl
-
-install with 
-sudo dpkg -i <name>.deb
-then press enter twice for installing all missing dependencies
-
-#### Install wow via lutris (via wine) https://www.youtube.com/watch?v=vlV26V8yE1A https://www.youtube.com/watch?v=NUjQDl1xzGs
-
-##### Install wine https://gitlab.winehq.org/wine/wine/-/wikis/Debian-Ubuntu
-sudo dpkg --add-architecture i386 
-- Remember version os with 
-cat /etc/os-release
-(trixie)
-sudo mkdir -pm755 /etc/apt/keyrings
-wget -O - https://dl.winehq.org/wine-builds/winehq.key | sudo gpg --dearmor -o /etc/apt/keyrings/winehq-archive.key -
-
-sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/trixie/winehq-trixie.sources
-
-sudo apt update
-
-sudo apt install --install-recommends winehq-staging
-
-##### Install nvidia drivers (optional i think)
-- Installed synaptic package manager (to install nvidia drivers) through software app
-
-Went to synaptic package manager, searched nvidia
-Installed 'firmware-nvidia-gsp 550' (not sure this is the one)
-
-### DONT DO THIS
-#### TRIED INSTALLING NVIDIA-SMI TO CHECK NVIDIA DRIVERS AND BROKE EVERYTHING
-Installed nvidia-smi with apt package
-
-it broke everything
-
-##### TO FIX IT I HAD TO:
-ENTER TERMINAL INSTANCE: CTRL + ALT + F3
-sudo apt purge nvidia-smi
-sudo apt remove --purge '^nvidia-.*'
-sudo apt install xserver-xorg-video-nouveau
-sudo dpkg-reconfigure xserver-xorg
-sudo reboot
-
-##### Install nvidia-detect
-sudo apt install nvidia-detect
-
-### DONT DO THIS
-##### Not sure which version of the nvidia driver i need, the latest seem to be 580 but official docs point to 550, some docs say 535 as the more stable but you might miss out on newer fixes, so i go with 550
-
-### DO NOT RUN
-sudo apt install -y nvidia-driver-550 libvulkan1 libvulkan1:i386
-
-### IMPORTANT
-and this crashed again everything
-
-i did
-
-sudo nvidia-bug-report.sh
-
-then
-
-gunzip nvidia-bug-report.log.gz
-
-and then repetead the nouveau fix commands
-
-Now i will try with a deepseek answer + some debian wiki https://wiki.debian.org/NvidiaGraphicsDrivers#Debian_13_.22Trixie.22
-
-## Solution Steps:
-
-### 1. First, completely remove all NVIDIA packages and clean up:
-```bash
-sudo apt purge nvidia-* libnvidia-*
-sudo apt autoremove
-sudo apt clean
 ```
 
-### 2. Blacklist the Nouveau driver (critical step):
-```bash
-sudo touch /etc/modprobe.d/blacklist-nouveau.conf
-sudo nano /etc/modprobe.d/blacklist-nouveau.conf
-```
+---
 
-Add these lines:
-```
-blacklist nouveau
-options nouveau modeset=0
-```
+## OS Tweaks
 
-### 3. Update initramfs:
-```bash
-sudo update-initramfs -u
-```
+* Removed unused software (Sound Recorder, Mail, Music, GNOME Tour, Videos)
+* Added non-free repos: `contrib non-free` to `/etc/apt/sources.list`
+* Installed essentials: `fastfetch`, `htop`, `btop`
 
-### 4. Install Linux Headers
-```bash
-sudo apt install linux-headers-$(dpkg --print-architecture)
-```
+### Installed Software
 
-### 5. Install the correct NVIDIA drivers:
-```bash
-#official install
-sudo apt install nvidia-kernel-dkms nvidia-driver firmware-misc-nonfree
-```
+* **Deb:** Thunderbird
+* **Flatpak:** Discord, Telegram, Extension Manager
+* **GNOME Extensions:** Dash to Dock, Blur My Shell, Caffeine, Clipboard Indicator, Removable Drive Menu, Vitals, DING (Desktop Icons NG)
+* **Tweaks:** added minimize/maximize buttons
+* **Other:** Shortcut app, GParted, BalenaEtcher, gdisk, Steam, Lutris, GIMP, Krita, Inkscape, KdenLive, OBS
 
-### 6. Rebuild kernel modules:
-```bash
-sudo dpkg-reconfigure nvidia-kernel-dkms
-```
+---
 
-### 7. Reboot:
-```bash
-sudo reboot
-```
+## Driver Issues & Fixes
 
-### 8. Config
-Go to Nvidia x-server to check that everything is okay
-go to display settings in gnome settings to select the correct resolution
+* Installed NVIDIA drivers via Synaptic (`firmware-nvidia-gsp 550`)
+* Broke system trying `nvidia-smi` → fixed by purging NVIDIA, reinstalling Nouveau
+* Later used proper NVIDIA setup:
 
-#### Install Lutris https://lutris.net/downloads https://www.youtube.com/watch?v=vlV26V8yE1A
+  * Blacklisted Nouveau
+  * Installed `nvidia-kernel-dkms nvidia-driver firmware-misc-nonfree`
+  * Rebuilt kernel modules
+  * Rebooted and configured with NVIDIA X-server
 
-echo -e "Types: deb\nURIs: https://download.opensuse.org/repositories/home:/strycore/Debian_12/\nSuites: ./\nComponents: \nSigned-By: /etc/apt/keyrings/lutris.gpg" | sudo tee /etc/apt/sources.list.d/lutris.sources > /dev/null
+---
 
-wget -q -O- https://download.opensuse.org/repositories/home:/strycore/Debian_12/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/lutris.gpg
+## Gaming Setup
 
-sudo apt update
+* Installed Wine (Staging) and dependencies
+* Installed Lutris (from openSUSE repo)
+* Set up ProtonPlus for Battle.net workaround
+* Configured Lutris to use GE-Proton builds
 
-sudo apt install lutris
+---
 
-#### Lutris did not work for installing battle net :(
-#### Some solutions online indicate:
-https://forums.lutris.net/t/last-battle-net-installer-not-working/23063
-Hello, you will need to install WIne Staging 10.7 TKG, follow this steps:
+## Final Notes
 
-How to install Wine Staging 10.7 TKG to Lutris using ProtonPlus and set it as default Lutris WIne version
+* Run `sudo update-grub` after changes
+* Avoid blindly installing NVIDIA drivers without checking Debian Wiki
 
-    install ProtonPlus with Flatpak: Install ProtonPlus on Linux | Flathub 53
-    To install ProtonPlus from a terminal:
-    flatpak install flathub com.vysp3r.ProtonPlus
-    You can also compile it from sources: GitHub - Vysp3r/ProtonPlus: A modern compatibility tools manager for Linux. 17
-
-    Then open ProtonPlus and install Wine-Staging 10.7 TKG for Lutris
-
-    Now set default Lutris Wine version to Wine Staging 10.7 TKG In Lutris left panel,
-    choose Wine Runner, click on config icon, then, in “Runner options” tab,
-    change Wine version to Wine Staging 10.7 TKG and save
-
-
-→ set “GE-Proton latest” as default in Lutris to resolve Battle.Net 5 install issue
-in Lutris menu, preferences, runners, wine, click on the wheel, set “GE-Proton latest” as default Lutris Wine version
-→ use “GE-Proton latest” to play WOW, Warcraft III, starcraft etc…
-→ If Battle.Net 5 interface is black, enable hardware acceleration in Battle.Net 5 options
-
-If you don’t have “GE-Proton latest” in your list, you will need to install GE-Proton 10.4 (or an older version) with a tierce app like ProtonPlus
-
-#####
-https://www.reddit.com/r/cachyos/comments/1ke6tea/battlenet_via_lutris_failing_to_reinstall/
-
-    Install Proton 10 Beta from steam
-
-    Select in Lutris
-
-    Proceed Installation
-
-
-
-#### Installed graphic/image/video editing software through software app
-- GIMP
-- Krita
-- Inkscape
-- KdenLive
-- OBS
-
-##### Run update-grub
-
-sudo update-grub
+---
