@@ -144,8 +144,8 @@ sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flat
 ## Driver Installation, Issues & Fixes
 
 * Installed NVIDIA drivers via Synaptic (`firmware-nvidia-gsp 550`) (OPTIONAL, its not confirmed that this is neccessary in any way)
-* Broke system trying `nvidia-smi` → fixed by purging NVIDIA, reinstalling Nouveau
-  how to purge nvidia and reinstall Nouveau video driver:
+* Broke system trying `nvidia-smi` → fixed by purging NVIDIA, reinstalling Nouveau.
+  * How to purge nvidia and reinstall Nouveau video driver:
   ```bash
    # ENTER TERMINAL INSTANCE: CTRL + ALT + F3
    sudo apt purge nvidia-smi
@@ -155,7 +155,7 @@ sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flat
    sudo reboot
   ```
 * Later used proper NVIDIA setup: (https://wiki.debian.org/NvidiaGraphicsDrivers#Debian_13_.22Trixie.22)
-  * In case there you broke the system trying to install nvidia drivers before, do
+  * In case that you broke the system trying to install nvidia drivers before, do a cleanup with:
     ```bash
     sudo apt purge nvidia-* libnvidia-*
     sudo apt autoremove
