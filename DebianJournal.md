@@ -1,4 +1,4 @@
-# Debian Journey
+# Debian Journal
 
 ## System Information
 
@@ -58,6 +58,18 @@
 
 * Changed background & profile picture
 * Added user to sudoers via `visudo`
+   ```bash
+   su
+   sudo usermod -aG sudo username
+   sudo reboot
+   
+   (as your user)
+   sudo visudo /etc/sudoers
+   
+   add lines: '
+   youruser    ALL=(ALL) NOPASSWD:ALL
+   '
+   ```
 * Updated system with `apt update && apt upgrade`
 
 ---
@@ -65,8 +77,12 @@
 ## Disk Management
 
 * Used **Disks** app for automatic mounts
-* Created shortcuts for mounted drives
-* Added recognizable mount points
+* Select desired disk
+* Click Additional partition options (ruedita)
+* Click 'Edit Mount Options'
+* Disable User defaults
+* Edit Mount Point to a recognizible name
+* Save
 
 ---
 
@@ -87,10 +103,13 @@
 ---
 
 ## Flatpak Installation
-
+(i think this ones are optional, they installed flatpak but it wasnt showing up on the store, try only the last comand and see if it works)
 ```bash
 sudo apt install flatpak
 sudo apt-get --reinstall install -y gnome-software-plugin-flatpak
+```
+last command
+```bash
 sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 ```
 
@@ -99,8 +118,18 @@ sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flat
 ## OS Tweaks
 
 * Removed unused software (Sound Recorder, Mail, Music, GNOME Tour, Videos)
-* Added non-free repos: `contrib non-free` to `/etc/apt/sources.list`
-* Installed essentials: `fastfetch`, `htop`, `btop`
+* Added non-free repos (just in case, only for nvidia drivers probably): `contrib non-free` to `/etc/apt/sources.list` after every `main` appearance
+* Installed essentials with apt: `fastfetch`, `htop`, `btop`, `curl`
+* Added fastfetch at every terminal except vscode
+  ```bash
+    nano ~/.bashrc
+
+    # add the following lines
+
+    if [ "$TERM_PROGRAM" != "vscode" ]; then
+        fastfetch
+    fi
+  ```bash
 
 ### Installed Software
 
@@ -108,35 +137,87 @@ sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flat
 * **Flatpak:** Discord, Telegram, Extension Manager
 * **GNOME Extensions:** Dash to Dock, Blur My Shell, Caffeine, Clipboard Indicator, Removable Drive Menu, Vitals, DING (Desktop Icons NG)
 * **Tweaks:** added minimize/maximize buttons
-* **Other:** Shortcut app, GParted, BalenaEtcher, gdisk, Steam, Lutris, GIMP, Krita, Inkscape, KdenLive, OBS
+* **Other:** Shortcut app, GParted, BalenaEtcher, gdisk, GIMP, Krita, Inkscape, KdenLive, OBS
 
 ---
 
-## Driver Issues & Fixes
+## Driver Installation, Issues & Fixes
 
-* Installed NVIDIA drivers via Synaptic (`firmware-nvidia-gsp 550`)
+* Installed NVIDIA drivers via Synaptic (`firmware-nvidia-gsp 550`) (OPTIONAL, its not confirmed that this is neccessary in any way)
 * Broke system trying `nvidia-smi` → fixed by purging NVIDIA, reinstalling Nouveau
-* Later used proper NVIDIA setup:
-
+  how to purge nvidia and reinstall Nouveau video driver:
+  ```bash
+   # ENTER TERMINAL INSTANCE: CTRL + ALT + F3
+   sudo apt purge nvidia-smi
+   sudo apt remove --purge '^nvidia-.*'
+   sudo apt install xserver-xorg-video-nouveau
+   sudo dpkg-reconfigure xserver-xorg
+   sudo reboot
+  ```
+* Later used proper NVIDIA setup: (https://wiki.debian.org/NvidiaGraphicsDrivers#Debian_13_.22Trixie.22)
+  * In case there you broke the system trying to install nvidia drivers before, do
+    ```bash
+    sudo apt purge nvidia-* libnvidia-*
+    sudo apt autoremove
+    sudo apt clean
+    ```
   * Blacklisted Nouveau
+    ```bash
+    sudo touch /etc/modprobe.d/blacklist-nouveau.conf
+    sudo nano /etc/modprobe.d/blacklist-nouveau.conf
+    ```
+    Add these lines:
+    ```
+    blacklist nouveau
+    options nouveau modeset=0
+    ```
+  * Update initramfs:
+    ```bash
+    sudo update-initramfs -u
+    ```
+  * Install Linux Headers
+    ```bash
+    sudo apt install linux-headers-$(dpkg --print-architecture)
+    ```
   * Installed `nvidia-kernel-dkms nvidia-driver firmware-misc-nonfree`
   * Rebuilt kernel modules
-  * Rebooted and configured with NVIDIA X-server
+    ```bash
+    sudo dpkg-reconfigure nvidia-kernel-dkms
+    ```
+  * Rebooted and configured with NVIDIA X-server + correct resolution in Gnome Config
 
 ---
 
-## Gaming Setup
-
-* Installed Wine (Staging) and dependencies
-* Installed Lutris (from openSUSE repo)
-* Set up ProtonPlus for Battle.net workaround
-* Configured Lutris to use GE-Proton builds
+## Gaming Setup (https://www.youtube.com/watch?v=vlV26V8yE1A https://www.youtube.com/watch?v=NUjQDl1xzGs)
+### Steam installation
+* go to steam page https://steamcommunity.com/ and download .deb
+* install with
+* sudo dpkg -i <name>.deb
+* then press enter twice for installing all missing dependencies
+### Wine installation (https://gitlab.winehq.org/wine/wine/-/wikis/Debian-Ubuntu)
+```bash
+sudo dpkg --add-architecture i386 
+sudo mkdir -pm755 /etc/apt/keyrings
+wget -O - https://dl.winehq.org/wine-builds/winehq.key | sudo gpg --dearmor -o /etc/apt/keyrings/winehq-archive.key -
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/trixie/winehq-trixie.sources
+sudo apt update
+sudo apt install --install-recommends winehq-staging
+```
+### Lutris installation (from openSUSE repo) (https://lutris.net/downloads https://www.youtube.com/watch?v=vlV26V8yE1A)
+```bash
+echo -e "Types: deb\nURIs: https://download.opensuse.org/repositories/home:/strycore/Debian_12/\nSuites: ./\nComponents: \nSigned-By: /etc/apt/keyrings/lutris.gpg" | sudo tee /etc/apt/sources.list.d/lutris.sources > /dev/null
+wget -q -O- https://download.opensuse.org/repositories/home:/strycore/Debian_12/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/lutris.gpg
+sudo apt update
+sudo apt install lutris
+```
+* In Case Lutris doesnt let you install BattleNet as i could not, set up ProtonPlus for Battle.net workaround (change wine and proton versions) (https://forums.lutris.net/t/last-battle-net-installer-not-working/23063) (https://www.reddit.com/r/cachyos/comments/1ke6tea/battlenet_via_lutris_failing_to_reinstall/)
+* Or, you could install Battle Net through Steam (https://www.youtube.com/watch?v=wwT-VocQuKc)
 
 ---
 
 ## Final Notes
 
-* Run `sudo update-grub` after changes
+* In case of dual boot and your 2nd system not beign read, run `sudo update-grub`
 * Avoid blindly installing NVIDIA drivers without checking Debian Wiki
 
 ---
